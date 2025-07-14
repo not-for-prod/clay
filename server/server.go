@@ -34,7 +34,7 @@ func NewServer(rpcPort int, opts ...Option) *Server {
 
 // Run starts processing requests to the service.
 // It blocks indefinitely, run asynchronously to do anything after that.
-func (s *Server) Run(ctx context.Context, svc transport.Service) error {
+func (s *Server) Run(svc transport.Service) error {
 	desc := svc.GetDescription()
 
 	var err error
@@ -43,7 +43,7 @@ func (s *Server) Run(ctx context.Context, svc transport.Service) error {
 		return errors.Wrap(err, "couldn't create listeners")
 	}
 
-	s.srv = newServerSet(s.listeners, s.opts)
+	s.srv = newServerSet(s.opts)
 
 	// Inject static Swagger as root handler
 	s.srv.http.HandleFunc("/swagger.json", func(w http.ResponseWriter, req *http.Request) {
@@ -73,7 +73,7 @@ func (s *Server) Run(ctx context.Context, svc transport.Service) error {
 	// Register everything
 	mux := runtime.NewServeMux(s.opts.RuntimeServeMuxOpts...)
 
-	if err = desc.RegisterHTTP(ctx, mux); err != nil {
+	if err = desc.RegisterHTTP(context.Background(), mux); err != nil {
 		return errors.Wrap(err, "couldn't register HTTP server")
 	}
 

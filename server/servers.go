@@ -11,11 +11,15 @@ type serverSet struct {
 	grpc *grpc.Server
 }
 
-func newServerSet(listeners *listenerSet, opts *serverOpts) *serverSet {
+func newServerSet(opts *serverOpts) *serverSet {
 	http := chi.NewMux()
 
 	if opts.HTTPMux != nil {
 		http = opts.HTTPMux
+	}
+
+	if len(opts.HTTPMiddlewares) > 0 {
+		http.Use(opts.HTTPMiddlewares...)
 	}
 
 	if len(opts.HTTPMiddlewares) > 0 {

@@ -2,7 +2,6 @@ package transport
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -20,12 +19,6 @@ type ServiceDesc interface {
 	RegisterGRPC(*grpc.Server)
 	RegisterHTTP(ctx context.Context, mux *runtime.ServeMux) error
 	SwaggerDef() []byte
-}
-
-// Router routes HTTP requests around.
-type Router interface {
-	http.Handler
-	Handle(pattern string, h http.Handler)
 }
 
 // ConfigurableServiceDesc is implemented by configurable ServiceDescs.
