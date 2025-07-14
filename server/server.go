@@ -71,7 +71,7 @@ func (s *Server) Run(ctx context.Context, svc transport.Service) error {
 	}
 
 	// Register everything
-	mux := runtime.NewServeMux()
+	mux := runtime.NewServeMux(s.opts.RuntimeServeMuxOpts...)
 
 	if err = desc.RegisterHTTP(ctx, mux); err != nil {
 		return errors.Wrap(err, "couldn't register HTTP server")

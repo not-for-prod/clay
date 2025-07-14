@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/go-chi/chi/v5"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/not-for-prod/clay/server"
 	"github.com/not-for-prod/clay/server/middlewares/mwhttp"
 	"google.golang.org/grpc"
@@ -11,8 +12,8 @@ import (
 type Option = server.Option
 
 // WithGRPCOpts sets gRPC server options.
-func WithGRPCOpts(opts []grpc.ServerOption) Option {
-	return server.WithGRPCOpts(opts)
+func WithGRPCOpts(opts ...grpc.ServerOption) Option {
+	return server.WithGRPCOpts(opts...)
 }
 
 // WithHTTPPort sets HTTP RPC port to listen on.
@@ -39,4 +40,8 @@ func WithGRPCStreamMiddlewares(mws ...grpc.StreamServerInterceptor) Option {
 // WithHTTPMux sets existing HTTP muxer to use instead of creating new one.
 func WithHTTPMux(mux *chi.Mux) Option {
 	return server.WithHTTPMux(mux)
+}
+
+func WithRuntimeServeMuxOpts(opts ...runtime.ServeMuxOption) Option {
+	return server.WithRuntimeServeMuxOpts(opts...)
 }

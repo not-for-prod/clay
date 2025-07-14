@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/not-for-prod/clay/server/middlewares/mwhttp"
 	"google.golang.org/grpc"
 )
@@ -23,7 +24,8 @@ type serverOpts struct {
 	GRPCOpts             []grpc.ServerOption
 	GRPCUnaryInterceptor grpc.UnaryServerInterceptor
 
-	EnableReflection bool
+	EnableReflection    bool
+	RuntimeServeMuxOpts []runtime.ServeMuxOption
 }
 
 func defaultServerOpts(mainPort int) *serverOpts {
@@ -35,7 +37,7 @@ func defaultServerOpts(mainPort int) *serverOpts {
 }
 
 // WithGRPCOpts sets gRPC server options.
-func WithGRPCOpts(opts []grpc.ServerOption) Option {
+func WithGRPCOpts(opts ...grpc.ServerOption) Option {
 	return func(o *serverOpts) {
 		o.GRPCOpts = append(o.GRPCOpts, opts...)
 	}
@@ -86,5 +88,11 @@ func WithHTTPMux(mux *chi.Mux) Option {
 func EnableReflection(enable bool) Option {
 	return func(o *serverOpts) {
 		o.EnableReflection = enable
+	}
+}
+
+func WithRuntimeServeMuxOpts(opts ...runtime.ServeMuxOption) Option {
+	return func(o *serverOpts) {
+		o.RuntimeServeMuxOpts = append(o.RuntimeServeMuxOpts, opts...)
 	}
 }
