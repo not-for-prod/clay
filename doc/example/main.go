@@ -6,8 +6,8 @@ import (
 	"github.com/sirupsen/logrus"
 	sum "github.com/utrack/clay/doc/example/implementation"
 
-	"github.com/not-for-prod/clay/log"
-	"github.com/not-for-prod/clay/transport/middlewares/mwgrpc"
+	"github.com/not-for-prod/clay/server/log"
+	"github.com/not-for-prod/clay/server/middlewares/mwgrpc"
 	"github.com/not-for-prod/clay/transport/server"
 )
 
