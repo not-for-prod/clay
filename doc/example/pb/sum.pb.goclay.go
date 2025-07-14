@@ -8,7 +8,6 @@ import (
 	runtime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	transport "github.com/not-for-prod/clay/transport"
 	httptransport "github.com/not-for-prod/clay/transport/httptransport"
-	swagger "github.com/not-for-prod/clay/transport/swagger"
 	grpc "google.golang.org/grpc"
 )
 
@@ -40,7 +39,7 @@ func (d *SummatorServiceDesc) Apply(oo ...transport.DescOption) {
 }
 
 // SwaggerDef returns this file's Swagger definition.
-func (d *SummatorServiceDesc) SwaggerDef(options ...swagger.Option) []byte {
+func (d *SummatorServiceDesc) SwaggerDef() []byte {
 	return Swagger
 }
 

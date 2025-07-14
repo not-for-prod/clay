@@ -1,8 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "sum.proto",
-    "version": "version not set"
+    "title": "Summator",
+    "description": "summator application",
+    "version": "1.0"
   },
   "tags": [
     {

@@ -82,7 +82,7 @@ func generate(p *protogen.Plugin, f *protogen.File) {
 	g.P("}")
 	g.P()
 	g.P("// SwaggerDef returns this file's Swagger definition.")
-	g.P("func(d *", descName, ") SwaggerDef(options ...", swaggerPackage.Ident("Option"), ") []byte {")
+	g.P("func(d *", descName, ") SwaggerDef() []byte {")
 	g.P(`return Swagger`)
 	g.P("}")
 	g.P()

@@ -6,6 +6,17 @@ option go_package="./pb;sum";
 // uncomment for inline HTTP desc google.api.http
 import "google/api/annotations.proto";
 
+// almost every swagger modification can be done with this
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Summator"
+    description: "summator application"
+    version: "1.0"
+  }
+};
+
 service Summator {
   rpc Sum(SumRequest) returns (SumResponse) {
     option (google.api.http) = {

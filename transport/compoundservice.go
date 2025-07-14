@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/not-for-prod/clay/transport/swagger"
 	"google.golang.org/grpc"
 )
 
@@ -31,10 +30,10 @@ func (d *CompoundServiceDesc) RegisterHTTP(ctx context.Context, mux *runtime.Ser
 	return nil
 }
 
-func (d *CompoundServiceDesc) SwaggerDef(options ...swagger.Option) []byte {
+func (d *CompoundServiceDesc) SwaggerDef() []byte {
 	j := &swagJoiner{}
 	for _, svc := range d.svc {
-		j.AddDefinition(svc.SwaggerDef(options...))
+		j.AddDefinition(svc.SwaggerDef())
 	}
 	return j.SumDefinitions()
 }
