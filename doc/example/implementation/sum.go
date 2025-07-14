@@ -8,6 +8,9 @@ import (
 
 	"github.com/pkg/errors"
 	desc "github.com/utrack/clay/doc/example/pb"
+	"google.golang.org/genproto/googleapis/rpc/errdetails"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (i *SummatorImplementation) Sum(ctx context.Context, req *desc.SumRequest) (*desc.SumResponse, error) {
@@ -19,7 +22,26 @@ func (i *SummatorImplementation) Sum(ctx context.Context, req *desc.SumRequest) 
 		panic(errors.New("we've got a problem; the panic is planned to happen"))
 	}
 
+	if req.GetB().B == 65537 {
+		st, err := status.New(
+			codes.InvalidArgument,
+			"test",
+		).WithDetails(
+			&errdetails.ErrorInfo{
+				Reason:   "invalid argument",
+				Domain:   "summator",
+				Metadata: map[string]string{"foo": "bar"},
+			},
+		)
+		if err != nil {
+			return nil, status.Error(codes.Internal, "something went wrong")
+		}
+
+		return nil, st.Err()
+	}
+
 	sum := req.GetA() + req.GetB().B
+
 	return &desc.SumResponse{
 		Sum: sum,
 	}, nil

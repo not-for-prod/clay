@@ -22,12 +22,7 @@ NC=:\033[0m
 	GOBIN=$(LOCAL_BIN) go install -mod=mod google.golang.org/grpc/cmd/protoc-gen-go-grpc
 
 build: .protoc-build
-	protoc \
-		--plugin=protoc-gen-goclay=$(GEN_CLAY_BIN) --goclay_out=. --goclay_opt=impl=true,force=false,tests=false,impl_path=../implementation,paths=source_relative \
-		--plugin=protoc-gen-go=$(GEN_GO_BIN) --go_out=. --go_opt=paths=source_relative \
-		--plugin=protoc-gen-go-grpc=$(GEN_GO_GRPC_BIN) --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-		-I/usr/local/include:${THIRD_PARTY_PROTO_PATH}:. \
-		pb/sum.proto
+	buf dep update
 
 run-server:
 	go run ./main.go
@@ -37,3 +32,8 @@ run-client-http:
 
 run-client-grpc:
 	go run ./client-grpc/main.go
+
+generate:
+	buf dep update
+	buf dep prune
+	buf generate

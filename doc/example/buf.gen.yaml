@@ -1,0 +1,36 @@
+version: v2
+managed:
+  enabled: true
+  disable:
+    - module: buf.build/protocolbuffers/go
+    - module: buf.build/googleapis/googleapis
+    - module: buf.build/grpc/go
+    - module: buf.build/grpc-ecosystem/grpc-gateway
+  override:
+    - file_option: go_package_prefix
+      value: github.com/utrack/clay/v3/doc/example
+plugins:
+  - remote: buf.build/protocolbuffers/go
+    out: pb
+    opt:
+      - paths=source_relative
+  - remote: buf.build/grpc/go
+    out: pb
+    opt:
+      - paths=source_relative
+      - require_unimplemented_servers=false
+  - remote: buf.build/grpc-ecosystem/gateway
+    opt:
+      - generate_unbound_methods=true
+      - logtostderr=true
+      - paths=source_relative
+    out: pb
+  - remote: buf.build/grpc-ecosystem/openapiv2
+    out: pb
+    opt:
+      - generate_unbound_methods=true
+      - fqn_for_openapi_name=true
+  - local: ./bin/protoc-gen-goclay
+    out: pb
+    opt:
+      - paths=source_relative
