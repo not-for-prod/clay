@@ -1,11 +1,9 @@
 package server
 
 import (
-	"github.com/utrack/clay/v3/server"
-	"github.com/utrack/clay/v3/server/middlewares/mwhttp"
-	"github.com/utrack/clay/v3/transport"
-
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
+	"github.com/not-for-prod/clay/server"
+	"github.com/not-for-prod/clay/server/middlewares/mwhttp"
 	"google.golang.org/grpc"
 )
 
@@ -41,8 +39,4 @@ func WithGRPCStreamMiddlewares(mws ...grpc.StreamServerInterceptor) Option {
 // WithHTTPMux sets existing HTTP muxer to use instead of creating new one.
 func WithHTTPMux(mux *chi.Mux) Option {
 	return server.WithHTTPMux(mux)
-}
-
-func WithHTTPRouterMux(mux transport.Router) Option {
-	return server.WithHTTPRouterMux(mux)
 }

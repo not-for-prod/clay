@@ -1,7 +1,10 @@
 package transport
 
 import (
-	"github.com/utrack/clay/v3/transport/swagger"
+	"context"
+
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/not-for-prod/clay/transport/swagger"
 	"google.golang.org/grpc"
 )
 
@@ -19,10 +22,13 @@ func (d *CompoundServiceDesc) RegisterGRPC(g *grpc.Server) {
 	}
 }
 
-func (d *CompoundServiceDesc) RegisterHTTP(r Router) {
+func (d *CompoundServiceDesc) RegisterHTTP(ctx context.Context, mux *runtime.ServeMux) error {
 	for _, svc := range d.svc {
-		svc.RegisterHTTP(r)
+		if err := svc.RegisterHTTP(ctx, mux); err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 func (d *CompoundServiceDesc) SwaggerDef(options ...swagger.Option) []byte {

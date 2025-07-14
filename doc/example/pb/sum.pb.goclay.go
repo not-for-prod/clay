@@ -6,9 +6,9 @@ import (
 	context "context"
 	_ "embed"
 	runtime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	transport "github.com/utrack/clay/v3/transport"
-	httptransport "github.com/utrack/clay/v3/transport/httptransport"
-	swagger "github.com/utrack/clay/v3/transport/swagger"
+	transport "github.com/not-for-prod/clay/transport"
+	httptransport "github.com/not-for-prod/clay/transport/httptransport"
+	swagger "github.com/not-for-prod/clay/transport/swagger"
 	grpc "google.golang.org/grpc"
 )
 

@@ -1,11 +1,13 @@
-/*Package httpmw provides middlewares that are automatically
-used by the generated code.*/
+/*
+Package httpmw provides middlewares that are automatically
+used by the generated code.
+*/
 package httpmw
 
 import (
 	"net/http"
 
-	"github.com/utrack/clay/v3/transport/httptransport"
+	"github.com/not-for-prod/clay/transport/httptransport"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"

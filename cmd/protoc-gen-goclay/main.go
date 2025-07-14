@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"path/filepath"
+	"strconv"
 
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/types/pluginpb"
@@ -12,9 +14,10 @@ var (
 	contextPackage       = protogen.GoImportPath("context")
 	grpcPackage          = protogen.GoImportPath("google.golang.org/grpc")
 	embedPackage         = protogen.GoImportPath("embed")
-	httptransportPackage = protogen.GoImportPath("github.com/utrack/clay/v3/transport/httptransport")
-	transportPackage     = protogen.GoImportPath("github.com/utrack/clay/v3/transport")
-	swaggerPackage       = protogen.GoImportPath("github.com/utrack/clay/v3/transport/swagger")
+	httptransportPackage = protogen.GoImportPath("github.com/not-for-prod/clay/transport/httptransport")
+	transportPackage     = protogen.GoImportPath("github.com/not-for-prod/clay/transport")
+	swaggerPackage       = protogen.GoImportPath("github.com/not-for-prod/clay/transport/swagger")
+	runtimePackage       = protogen.GoImportPath("github.com/grpc-ecosystem/grpc-gateway/v2/runtime")
 )
 
 func main() {
@@ -84,13 +87,48 @@ func generate(p *protogen.Plugin, f *protogen.File) {
 	g.P("}")
 	g.P()
 	g.P("// RegisterHTTP registers this service's HTTP handlers/bindings.")
-	g.P("func(d *", descName, ") RegisterHTTP(mux ", transportPackage.Ident("Router"), ") {")
-	g.P("ctx := ", contextPackage.Ident("Background"), "()")
-	g.P("err := Register", service.GoName, "HandlerServer(ctx, mux, d.svc)")
-	g.P("if err != nil {")
-	g.P("panic(err)")
+	g.P("func(w *", descName, ") RegisterHTTP(")
+	g.P("ctx ", g.QualifiedGoIdent(contextPackage.Ident("Context")), ",")
+	g.P("mux *", g.QualifiedGoIdent(runtimePackage.Ident("ServeMux")), ",")
+	g.P(") error {")
+	g.P("return Register", service.GoName, "HandlerServer(ctx, mux, w)")
 	g.P("}")
+	g.P()
+	g.P("// Wrap all http methods with interceptor support")
+	g.P()
+	// Wrapper method implementations.
+	for _, method := range service.Methods {
+		if !method.Desc.IsStreamingClient() && !method.Desc.IsStreamingServer() {
+			genServerMethod(g, method)
+		}
+	}
+}
+
+func genServerMethod(
+	g *protogen.GeneratedFile,
+	method *protogen.Method,
+) {
+	service := method.Parent
+	descName := service.GoName + "ServiceDesc"
+
+	g.P("func (w *", descName, ") ", method.GoName, "(ctx ", contextPackage.Ident("Context"), ", in *",
+		method.Input.GoIdent, ") (*",
+		method.Output.GoIdent, ", error) {")
+	g.P("if w.opts.UnaryInterceptor == nil { return w.svc.", method.GoName, "(ctx, in) }")
+	g.P("info := &", grpcPackage.Ident("UnaryServerInfo"), "{")
+	g.P("Server: w,")
+	g.P("FullMethod: ", strconv.Quote(fmt.Sprintf("/%s/%s", service.Desc.FullName(), method.Desc.Name())), ",")
 	g.P("}")
+	g.P("handler := func(ctx ", contextPackage.Ident("Context"), ", req interface{}) (interface{}, error) {")
+	g.P("return w.svc.", method.GoName, "(ctx, req.(*", method.Input.GoIdent, "))")
+	g.P("}")
+	g.P("resp, err := w.opts.UnaryInterceptor(ctx, in, info, handler)")
+	g.P("if err != nil || resp == nil {")
+	g.P("return nil, err")
+	g.P("}")
+	g.P("return resp.(*", method.Output.GoIdent, "), err")
+	g.P("}")
+	g.P()
 }
 
 func trimPathAndExt(fName string) string {

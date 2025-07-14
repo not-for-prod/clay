@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/not-for-prod/clay/transport"
+	"github.com/not-for-prod/clay/transport/swagger"
 	"github.com/stretchr/testify/assert"
-	"github.com/utrack/clay/v3/transport"
-	"github.com/utrack/clay/v3/transport/swagger"
 )
 
 func TestSwaggerComments(t *testing.T) {

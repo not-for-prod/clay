@@ -188,8 +188,8 @@ const file_sum_proto_rawDesc = "" +
 	"\aNestedB\x12\f\n" +
 	"\x01b\x18\x01 \x01(\x03R\x01b2X\n" +
 	"\bSummator\x12L\n" +
-	"\x03Sum\x12\x11.sumpb.SumRequest\x1a\x12.sumpb.SumResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01b\"\x13/v1/example/sum/{a}Bp\n" +
-	"\tcom.sumpbB\bSumProtoP\x01Z%github.com/utrack/clay/v3/doc/example\xa2\x02\x03SXX\xaa\x02\x05Sumpb\xca\x02\x05Sumpb\xe2\x02\x11Sumpb\\GPBMetadata\xea\x02\x05Sumpbb\x06proto3"
+	"\x03Sum\x12\x11.sumpb.SumRequest\x1a\x12.sumpb.SumResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01b\"\x13/v1/example/sum/{a}Bs\n" +
+	"\tcom.sumpbB\bSumProtoP\x01Z(github.com/not-for-prod/clay/doc/example\xa2\x02\x03SXX\xaa\x02\x05Sumpb\xca\x02\x05Sumpb\xe2\x02\x11Sumpb\\GPBMetadata\xea\x02\x05Sumpbb\x06proto3"
 
 var (
 	file_sum_proto_rawDescOnce sync.Once

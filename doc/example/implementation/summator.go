@@ -4,8 +4,8 @@
 package sum
 
 import (
+	"github.com/not-for-prod/clay/transport"
 	desc "github.com/utrack/clay/doc/example/pb"
-	"github.com/utrack/clay/v3/transport"
 )
 
 type SummatorImplementation struct {

@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/utrack/clay/v3/server"
+	"github.com/not-for-prod/clay/server"
 )
 
 // Server is a transport server.

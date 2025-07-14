@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"runtime/debug"
 
-	"github.com/utrack/clay/v3/server/middlewares/mwcommon"
+	"github.com/not-for-prod/clay/server/middlewares/mwcommon"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -14,7 +14,12 @@ import (
 // UnaryPanicHandler handles panics for UnaryHandlers.
 func UnaryPanicHandler(logger interface{}) grpc.UnaryServerInterceptor {
 	logFunc := mwcommon.GetLogFunc(logger)
-	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+	return func(
+		ctx context.Context,
+		req interface{},
+		info *grpc.UnaryServerInfo,
+		handler grpc.UnaryHandler,
+	) (resp interface{}, err error) {
 		defer func() {
 			if r := recover(); r != nil {
 				err = grpc.Errorf(codes.Internal, "panic: %v", r)
@@ -29,7 +34,12 @@ func UnaryPanicHandler(logger interface{}) grpc.UnaryServerInterceptor {
 // StreamPanicHandler handles panics for StreamHandlers.
 func StreamPanicHandler(logger interface{}) grpc.StreamServerInterceptor {
 	logFunc := mwcommon.GetLogFunc(logger)
-	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) (err error) {
+	return func(
+		srv interface{},
+		stream grpc.ServerStream,
+		info *grpc.StreamServerInfo,
+		handler grpc.StreamHandler,
+	) (err error) {
 		defer func() {
 			if r := recover(); r != nil {
 				err = grpc.Errorf(codes.Internal, "panic: %v", r)

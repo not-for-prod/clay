@@ -4,8 +4,8 @@
 package strings
 
 import (
+	"github.com/not-for-prod/clay/transport"
 	desc "github.com/utrack/clay/integration/go_package_separate_impl_exists/pkg/strings"
-	"github.com/utrack/clay/v3/transport"
 )
 
 type StringsImplementation struct {

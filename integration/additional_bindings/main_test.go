@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 
 	strings_pb "github.com/utrack/clay/integration/additional_bindings/pb"
 	strings_srv "github.com/utrack/clay/integration/additional_bindings/strings"

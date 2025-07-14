@@ -1,7 +1,7 @@
 package mwhttp
 
 import (
-	"github.com/utrack/clay/v3/server/middlewares/mwhttp"
+	"github.com/not-for-prod/clay/server/middlewares/mwhttp"
 )
 
 // Middleware is the HTTP middleware type.

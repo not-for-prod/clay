@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/utrack/clay/integration/binding_with_different_types_post/strings"
 )
 

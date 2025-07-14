@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"runtime/debug"
 
-	"github.com/utrack/clay/v3/server/middlewares/mwcommon"
-	"github.com/utrack/clay/v3/transport/httpruntime"
+	"github.com/not-for-prod/clay/server/middlewares/mwcommon"
+	"github.com/not-for-prod/clay/transport/httpruntime"
 
 	"github.com/pkg/errors"
 )

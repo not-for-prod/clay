@@ -4,8 +4,8 @@
 package strings
 
 import (
+	"github.com/not-for-prod/clay/transport"
 	desc "github.com/utrack/clay/integration/impl_type_name_tmpl/pb"
-	"github.com/utrack/clay/v3/transport"
 )
 
 type Strings struct {

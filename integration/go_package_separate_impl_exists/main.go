@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	desc2 "github.com/utrack/clay/integration/go_package_separate_impl_exists/internal/app/strings"
 )
 

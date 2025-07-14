@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/utrack/clay/integration/impl_service_sub_dir_2/strings"
 	"github.com/utrack/clay/integration/impl_service_sub_dir_2/strings-api"
 )

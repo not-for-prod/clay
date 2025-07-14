@@ -8,7 +8,7 @@ managed:
     - module: buf.build/grpc-ecosystem/grpc-gateway
   override:
     - file_option: go_package_prefix
-      value: github.com/utrack/clay/v3/doc/example
+      value: github.com/not-for-prod/clay/doc/example
 plugins:
   - remote: buf.build/protocolbuffers/go
     out: pb

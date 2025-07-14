@@ -3,11 +3,9 @@ package server
 import (
 	"net/http"
 
-	"github.com/utrack/clay/v3/server/middlewares/mwhttp"
-	"github.com/utrack/clay/v3/transport"
-
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	"github.com/not-for-prod/clay/server/middlewares/mwhttp"
 	"google.golang.org/grpc"
 )
 
@@ -18,7 +16,7 @@ type serverOpts struct {
 	RPCPort int
 	// If HTTPPort is the same then muxing listener is created.
 	HTTPPort int
-	HTTPMux  transport.Router
+	HTTPMux  *chi.Mux
 
 	HTTPMiddlewares []func(http.Handler) http.Handler
 
@@ -80,12 +78,6 @@ func WithGRPCStreamMiddlewares(mws ...grpc.StreamServerInterceptor) Option {
 
 // WithHTTPMux sets existing HTTP muxer to use instead of creating new one.
 func WithHTTPMux(mux *chi.Mux) Option {
-	return func(o *serverOpts) {
-		o.HTTPMux = mux
-	}
-}
-
-func WithHTTPRouterMux(mux transport.Router) Option {
 	return func(o *serverOpts) {
 		o.HTTPMux = mux
 	}

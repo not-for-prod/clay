@@ -1,4 +1,6 @@
-/* Package log is DEPRECATED, left for backwards compatibility.
-Please use github.com/utrack/clay/v3/server/log directly instead.
+/*
+	Package log is DEPRECATED, left for backwards compatibility.
+
+Please use github.com/not-for-prod/clay/server/log directly instead.
 */
 package log
