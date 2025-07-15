@@ -10,27 +10,22 @@ import (
 	desc "github.com/utrack/clay/doc/example/pb"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
 func (i *SummatorImplementation) Sum(ctx context.Context, req *desc.SumRequest) (*desc.SumResponse, error) {
-	if req.GetA() == 0 {
-		return nil, errors.New("a is zero")
-	}
-
-	if req.GetB().B == 65536 {
-		panic(errors.New("we've got a problem; the panic is planned to happen"))
-	}
-
-	if req.GetB().B == 65537 {
+	session := metadata.ValueFromIncomingContext(ctx, "summator-session")
+	if len(session) == 0 {
+		// grpc-gateway detailed errors
 		st, err := status.New(
-			codes.InvalidArgument,
-			"test",
+			codes.Unauthenticated,
+			"summator-session Cookie not set",
 		).WithDetails(
 			&errdetails.ErrorInfo{
-				Reason:   "invalid argument",
-				Domain:   "summator",
-				Metadata: map[string]string{"foo": "bar"},
+				Reason:   "no Cookie found",
+				Domain:   "Summator",
+				Metadata: map[string]string{},
 			},
 		)
 		if err != nil {
@@ -38,6 +33,20 @@ func (i *SummatorImplementation) Sum(ctx context.Context, req *desc.SumRequest) 
 		}
 
 		return nil, st.Err()
+	}
+
+	if req.GetA() == 0 {
+		return nil, errors.New("a is zero")
+	}
+
+	// Panic handling example
+	if req.GetB().B == 65536 {
+		panic(errors.New("we've got a problem; the panic is planned to happen"))
+	}
+
+	// Cookie behaviour example
+	if req.GetB().B == 65538 {
+
 	}
 
 	sum := req.GetA() + req.GetB().B

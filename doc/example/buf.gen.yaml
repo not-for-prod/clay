@@ -6,6 +6,7 @@ managed:
     - module: buf.build/googleapis/googleapis
     - module: buf.build/grpc/go
     - module: buf.build/grpc-ecosystem/grpc-gateway
+    - module: buf.build/bufbuild/protovalidate
   override:
     - file_option: go_package_prefix
       value: github.com/not-for-prod/clay/doc/example

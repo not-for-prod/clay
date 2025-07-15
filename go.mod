@@ -4,7 +4,6 @@ go 1.24.1
 
 require (
 	github.com/go-chi/chi/v5 v5.2.2
-	github.com/gogo/protobuf v1.3.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.1
 	github.com/peterbourgon/mergemap v0.0.1

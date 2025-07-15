@@ -53,6 +53,42 @@ func (w *SummatorServiceDesc) RegisterHTTP(
 
 // Wrap all http methods with interceptor support
 
+func (w *SummatorServiceDesc) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error) {
+	if w.opts.UnaryInterceptor == nil {
+		return w.svc.Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     w,
+		FullMethod: "/sumpb.Summator/Login",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return w.svc.Login(ctx, req.(*LoginRequest))
+	}
+	resp, err := w.opts.UnaryInterceptor(ctx, in, info, handler)
+	if err != nil || resp == nil {
+		return nil, err
+	}
+	return resp.(*LoginResponse), err
+}
+
+func (w *SummatorServiceDesc) Logout(ctx context.Context, in *LogoutRequest) (*LogoutResponse, error) {
+	if w.opts.UnaryInterceptor == nil {
+		return w.svc.Logout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     w,
+		FullMethod: "/sumpb.Summator/Logout",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return w.svc.Logout(ctx, req.(*LogoutRequest))
+	}
+	resp, err := w.opts.UnaryInterceptor(ctx, in, info, handler)
+	if err != nil || resp == nil {
+		return nil, err
+	}
+	return resp.(*LogoutResponse), err
+}
+
 func (w *SummatorServiceDesc) Sum(ctx context.Context, in *SumRequest) (*SumResponse, error) {
 	if w.opts.UnaryInterceptor == nil {
 		return w.svc.Sum(ctx, in)

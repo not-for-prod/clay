@@ -17,8 +17,75 @@
     "application/json"
   ],
   "paths": {
+    "/v1/example/login": {
+      "post": {
+        "summary": "Add cookie to storage.",
+        "operationId": "Summator_Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sumpb.LoginResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/google.rpc.Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/sumpb.LoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Authentification"
+        ]
+      }
+    },
+    "/v1/example/logout": {
+      "post": {
+        "summary": "Remove cookie form storage.",
+        "operationId": "Summator_Logout",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sumpb.LogoutResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/google.rpc.Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/sumpb.LogoutRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Authentification"
+        ]
+      }
+    },
     "/v1/example/sum/{a}": {
       "post": {
+        "summary": "Sum two numbers, require authentication.",
         "operationId": "Summator_Sum",
         "responses": {
           "200": {
@@ -49,7 +116,10 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/sumpb.NestedB"
+              "$ref": "#/definitions/sumpb.NestedB",
+              "required": [
+                "b"
+              ]
             }
           }
         ],
@@ -87,6 +157,30 @@
           }
         }
       }
+    },
+    "sumpb.LoginRequest": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "login",
+        "password"
+      ]
+    },
+    "sumpb.LoginResponse": {
+      "type": "object"
+    },
+    "sumpb.LogoutRequest": {
+      "type": "object"
+    },
+    "sumpb.LogoutResponse": {
+      "type": "object"
     },
     "sumpb.NestedB": {
       "type": "object",

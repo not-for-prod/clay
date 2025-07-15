@@ -19,13 +19,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Summator_Sum_FullMethodName = "/sumpb.Summator/Sum"
+	Summator_Login_FullMethodName  = "/sumpb.Summator/Login"
+	Summator_Logout_FullMethodName = "/sumpb.Summator/Logout"
+	Summator_Sum_FullMethodName    = "/sumpb.Summator/Sum"
 )
 
 // SummatorClient is the client API for Summator service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SummatorClient interface {
+	// Add cookie to storage.
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	// Remove cookie form storage.
+	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
+	// Sum two numbers, require authentication.
 	Sum(ctx context.Context, in *SumRequest, opts ...grpc.CallOption) (*SumResponse, error)
 }
 
@@ -35,6 +42,26 @@ type summatorClient struct {
 
 func NewSummatorClient(cc grpc.ClientConnInterface) SummatorClient {
 	return &summatorClient{cc}
+}
+
+func (c *summatorClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, Summator_Login_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *summatorClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LogoutResponse)
+	err := c.cc.Invoke(ctx, Summator_Logout_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *summatorClient) Sum(ctx context.Context, in *SumRequest, opts ...grpc.CallOption) (*SumResponse, error) {
@@ -51,6 +78,11 @@ func (c *summatorClient) Sum(ctx context.Context, in *SumRequest, opts ...grpc.C
 // All implementations should embed UnimplementedSummatorServer
 // for forward compatibility.
 type SummatorServer interface {
+	// Add cookie to storage.
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	// Remove cookie form storage.
+	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
+	// Sum two numbers, require authentication.
 	Sum(context.Context, *SumRequest) (*SumResponse, error)
 }
 
@@ -61,6 +93,12 @@ type SummatorServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSummatorServer struct{}
 
+func (UnimplementedSummatorServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedSummatorServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
 func (UnimplementedSummatorServer) Sum(context.Context, *SumRequest) (*SumResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Sum not implemented")
 }
@@ -82,6 +120,42 @@ func RegisterSummatorServer(s grpc.ServiceRegistrar, srv SummatorServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Summator_ServiceDesc, srv)
+}
+
+func _Summator_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SummatorServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Summator_Login_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SummatorServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Summator_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogoutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SummatorServer).Logout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Summator_Logout_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SummatorServer).Logout(ctx, req.(*LogoutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Summator_Sum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -109,6 +183,14 @@ var Summator_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "sumpb.Summator",
 	HandlerType: (*SummatorServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Login",
+			Handler:    _Summator_Login_Handler,
+		},
+		{
+			MethodName: "Logout",
+			Handler:    _Summator_Logout_Handler,
+		},
 		{
 			MethodName: "Sum",
 			Handler:    _Summator_Sum_Handler,

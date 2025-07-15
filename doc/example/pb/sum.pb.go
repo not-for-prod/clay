@@ -7,6 +7,7 @@
 package example
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -23,6 +24,166 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type LoginRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Login         string                 `protobuf:"bytes,1,opt,name=login,proto3" json:"login,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LoginRequest) Reset() {
+	*x = LoginRequest{}
+	mi := &file_sum_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LoginRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LoginRequest) ProtoMessage() {}
+
+func (x *LoginRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_sum_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
+func (*LoginRequest) Descriptor() ([]byte, []int) {
+	return file_sum_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *LoginRequest) GetLogin() string {
+	if x != nil {
+		return x.Login
+	}
+	return ""
+}
+
+func (x *LoginRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+type LoginResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LoginResponse) Reset() {
+	*x = LoginResponse{}
+	mi := &file_sum_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LoginResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LoginResponse) ProtoMessage() {}
+
+func (x *LoginResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_sum_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
+func (*LoginResponse) Descriptor() ([]byte, []int) {
+	return file_sum_proto_rawDescGZIP(), []int{1}
+}
+
+type LogoutRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LogoutRequest) Reset() {
+	*x = LogoutRequest{}
+	mi := &file_sum_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LogoutRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LogoutRequest) ProtoMessage() {}
+
+func (x *LogoutRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_sum_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LogoutRequest.ProtoReflect.Descriptor instead.
+func (*LogoutRequest) Descriptor() ([]byte, []int) {
+	return file_sum_proto_rawDescGZIP(), []int{2}
+}
+
+type LogoutResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LogoutResponse) Reset() {
+	*x = LogoutResponse{}
+	mi := &file_sum_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LogoutResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LogoutResponse) ProtoMessage() {}
+
+func (x *LogoutResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_sum_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LogoutResponse.ProtoReflect.Descriptor instead.
+func (*LogoutResponse) Descriptor() ([]byte, []int) {
+	return file_sum_proto_rawDescGZIP(), []int{3}
+}
+
 // SumRequest is a request for Summator service.
 type SumRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -36,7 +197,7 @@ type SumRequest struct {
 
 func (x *SumRequest) Reset() {
 	*x = SumRequest{}
-	mi := &file_sum_proto_msgTypes[0]
+	mi := &file_sum_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -48,7 +209,7 @@ func (x *SumRequest) String() string {
 func (*SumRequest) ProtoMessage() {}
 
 func (x *SumRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sum_proto_msgTypes[0]
+	mi := &file_sum_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -61,7 +222,7 @@ func (x *SumRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SumRequest.ProtoReflect.Descriptor instead.
 func (*SumRequest) Descriptor() ([]byte, []int) {
-	return file_sum_proto_rawDescGZIP(), []int{0}
+	return file_sum_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *SumRequest) GetA() int64 {
@@ -88,7 +249,7 @@ type SumResponse struct {
 
 func (x *SumResponse) Reset() {
 	*x = SumResponse{}
-	mi := &file_sum_proto_msgTypes[1]
+	mi := &file_sum_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -100,7 +261,7 @@ func (x *SumResponse) String() string {
 func (*SumResponse) ProtoMessage() {}
 
 func (x *SumResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sum_proto_msgTypes[1]
+	mi := &file_sum_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -113,7 +274,7 @@ func (x *SumResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SumResponse.ProtoReflect.Descriptor instead.
 func (*SumResponse) Descriptor() ([]byte, []int) {
-	return file_sum_proto_rawDescGZIP(), []int{1}
+	return file_sum_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *SumResponse) GetSum() int64 {
@@ -139,7 +300,7 @@ type NestedB struct {
 
 func (x *NestedB) Reset() {
 	*x = NestedB{}
-	mi := &file_sum_proto_msgTypes[2]
+	mi := &file_sum_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -151,7 +312,7 @@ func (x *NestedB) String() string {
 func (*NestedB) ProtoMessage() {}
 
 func (x *NestedB) ProtoReflect() protoreflect.Message {
-	mi := &file_sum_proto_msgTypes[2]
+	mi := &file_sum_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -164,7 +325,7 @@ func (x *NestedB) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NestedB.ProtoReflect.Descriptor instead.
 func (*NestedB) Descriptor() ([]byte, []int) {
-	return file_sum_proto_rawDescGZIP(), []int{2}
+	return file_sum_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *NestedB) GetB() int64 {
@@ -178,18 +339,30 @@ var File_sum_proto protoreflect.FileDescriptor
 
 const file_sum_proto_rawDesc = "" +
 	"\n" +
-	"\tsum.proto\x12\x05sumpb\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"8\n" +
+	"\tsum.proto\x12\x05sumpb\x1a\x1bbuf/validate/validate.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"V\n" +
+	"\fLoginRequest\x12\x1f\n" +
+	"\x05login\x18\x01 \x01(\tB\t\xe0A\x02\xbaH\x03\xc8\x01\x01R\x05login\x12%\n" +
+	"\bpassword\x18\x02 \x01(\tB\t\xe0A\x02\xbaH\x03\xc8\x01\x01R\bpassword\"\x0f\n" +
+	"\rLoginResponse\"\x0f\n" +
+	"\rLogoutRequest\"\x10\n" +
+	"\x0eLogoutResponse\"N\n" +
 	"\n" +
-	"SumRequest\x12\f\n" +
-	"\x01a\x18\x01 \x01(\x03R\x01a\x12\x1c\n" +
-	"\x01b\x18\x02 \x01(\v2\x0e.sumpb.NestedBR\x01b\"5\n" +
+	"SumRequest\x12\x17\n" +
+	"\x01a\x18\x01 \x01(\x03B\t\xe0A\x02\xbaH\x03\xc8\x01\x01R\x01a\x12'\n" +
+	"\x01b\x18\x02 \x01(\v2\x0e.sumpb.NestedBB\t\xe0A\x02\xbaH\x03\xc8\x01\x01R\x01b\"5\n" +
 	"\vSumResponse\x12\x10\n" +
 	"\x03sum\x18\x01 \x01(\x03R\x03sum\x12\x14\n" +
 	"\x05error\x18\x02 \x01(\tR\x05error\"\x17\n" +
 	"\aNestedB\x12\f\n" +
-	"\x01b\x18\x01 \x01(\x03R\x01b2X\n" +
-	"\bSummator\x12L\n" +
-	"\x03Sum\x12\x11.sumpb.SumRequest\x1a\x12.sumpb.SumResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01b\"\x13/v1/example/sum/{a}B\x9d\x01\x92A'\x12%\n" +
+	"\x01b\x18\x01 \x01(\x03R\x01b2\xb9\x02\n" +
+	"\bSummator\x12e\n" +
+	"\x05Login\x12\x13.sumpb.LoginRequest\x1a\x14.sumpb.LoginResponse\"1\x92A\x12\n" +
+	"\x10Authentification\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/v1/example/login\x12i\n" +
+	"\x06Logout\x12\x14.sumpb.LogoutRequest\x1a\x15.sumpb.LogoutResponse\"2\x92A\x12\n" +
+	"\x10Authentification\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/v1/example/logout\x12L\n" +
+	"\x03Sum\x12\x11.sumpb.SumRequest\x1a\x12.sumpb.SumResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01b\"\x13/v1/example/sum/{a}\x1a\r\x92A\n" +
+	"\n" +
+	"\bSummatorB\x9d\x01\x92A'\x12%\n" +
 	"\bSummator\x12\x14summator application2\x031.0\n" +
 	"\tcom.sumpbB\bSumProtoP\x01Z(github.com/not-for-prod/clay/doc/example\xa2\x02\x03SXX\xaa\x02\x05Sumpb\xca\x02\x05Sumpb\xe2\x02\x11Sumpb\\GPBMetadata\xea\x02\x05Sumpbb\x06proto3"
 
@@ -205,18 +378,26 @@ func file_sum_proto_rawDescGZIP() []byte {
 	return file_sum_proto_rawDescData
 }
 
-var file_sum_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_sum_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_sum_proto_goTypes = []any{
-	(*SumRequest)(nil),  // 0: sumpb.SumRequest
-	(*SumResponse)(nil), // 1: sumpb.SumResponse
-	(*NestedB)(nil),     // 2: sumpb.NestedB
+	(*LoginRequest)(nil),   // 0: sumpb.LoginRequest
+	(*LoginResponse)(nil),  // 1: sumpb.LoginResponse
+	(*LogoutRequest)(nil),  // 2: sumpb.LogoutRequest
+	(*LogoutResponse)(nil), // 3: sumpb.LogoutResponse
+	(*SumRequest)(nil),     // 4: sumpb.SumRequest
+	(*SumResponse)(nil),    // 5: sumpb.SumResponse
+	(*NestedB)(nil),        // 6: sumpb.NestedB
 }
 var file_sum_proto_depIdxs = []int32{
-	2, // 0: sumpb.SumRequest.b:type_name -> sumpb.NestedB
-	0, // 1: sumpb.Summator.Sum:input_type -> sumpb.SumRequest
-	1, // 2: sumpb.Summator.Sum:output_type -> sumpb.SumResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
+	6, // 0: sumpb.SumRequest.b:type_name -> sumpb.NestedB
+	0, // 1: sumpb.Summator.Login:input_type -> sumpb.LoginRequest
+	2, // 2: sumpb.Summator.Logout:input_type -> sumpb.LogoutRequest
+	4, // 3: sumpb.Summator.Sum:input_type -> sumpb.SumRequest
+	1, // 4: sumpb.Summator.Login:output_type -> sumpb.LoginResponse
+	3, // 5: sumpb.Summator.Logout:output_type -> sumpb.LogoutResponse
+	5, // 6: sumpb.Summator.Sum:output_type -> sumpb.SumResponse
+	4, // [4:7] is the sub-list for method output_type
+	1, // [1:4] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -233,7 +414,7 @@ func file_sum_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_sum_proto_rawDesc), len(file_sum_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -1,14 +1,14 @@
 syntax = "proto3";
 package sumpb;
 
-option go_package="./pb;sum";
-
+import "buf/validate/validate.proto";
 // uncomment for inline HTTP desc google.api.http
 import "google/api/annotations.proto";
-
+import "google/api/field_behavior.proto";
 // almost every swagger modification can be done with this
 import "protoc-gen-openapiv2/options/annotations.proto";
 
+option go_package = "./pb;sum";
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     title: "Summator"
@@ -18,21 +18,72 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service Summator {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Summator"};
+
+  // Add cookie to storage.
+  rpc Login(LoginRequest) returns (LoginResponse) {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "Authentification"
+    };
+
+    option (google.api.http) = {
+      post: "/v1/example/login"
+      body: "*"
+    };
+  }
+
+  // Remove cookie form storage.
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "Authentification"
+    };
+
+    option (google.api.http) = {
+      post: "/v1/example/logout"
+      body: "*"
+    };
+  }
+
+  // Sum two numbers, require authentication.
   rpc Sum(SumRequest) returns (SumResponse) {
     option (google.api.http) = {
-                                // uncomment get or post+body or use YAML annotation
-                                //get: "/v1/example/sum/{a}/{b}"
-                                post: "/v1/example/sum/{a}"
-                                body: "b"
+      // uncomment get or post+body or use YAML annotation
+      //get: "/v1/example/sum/{a}/{b}"
+      post: "/v1/example/sum/{a}"
+      body: "b"
     };
   }
 }
+
+message LoginRequest {
+  string login = 1 [
+    (buf.validate.field).required = true,
+    (google.api.field_behavior) = REQUIRED
+  ];
+  string password = 2 [
+    (buf.validate.field).required = true,
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message LoginResponse {}
+
+message LogoutRequest {}
+
+message LogoutResponse {}
+
 // SumRequest is a request for Summator service.
 message SumRequest {
   // A is the number we're adding to. Can't be zero for the sake of example.
-  int64 a = 1;
+  int64 a = 1 [
+    (buf.validate.field).required = true,
+    (google.api.field_behavior) = REQUIRED
+  ];
   // B is the number we're adding.
-  NestedB b = 2;
+  NestedB b = 2 [
+    (buf.validate.field).required = true,
+    (google.api.field_behavior) = REQUIRED
+  ];
 }
 
 message SumResponse {

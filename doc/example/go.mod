@@ -5,6 +5,8 @@ go 1.24.1
 replace github.com/not-for-prod/clay => ../../
 
 require (
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.6-20250625184727-c923a0c2a132.1
+	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.1
 	github.com/not-for-prod/clay v0.0.0-00010101000000-000000000000
 	github.com/pkg/errors v0.9.1
@@ -22,7 +24,6 @@ require (
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
 	github.com/go-openapi/spec v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.1 // indirect
-	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.9.0 // indirect
