@@ -4,7 +4,6 @@
 package sum
 
 import (
-	"github.com/not-for-prod/clay/transport"
 	desc "github.com/utrack/clay/doc/example/pb"
 )
 
@@ -15,10 +14,4 @@ type SummatorImplementation struct {
 // NewSummator create new SummatorImplementation
 func NewSummator() *SummatorImplementation {
 	return &SummatorImplementation{}
-}
-
-// GetDescription is a simple alias to the ServiceDesc constructor.
-// It makes it possible to register the service implementation @ the server.
-func (i *SummatorImplementation) GetDescription() transport.ServiceDesc {
-	return desc.NewSummatorServiceDesc(i)
 }

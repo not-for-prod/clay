@@ -16,7 +16,6 @@ var (
 	embedPackage         = protogen.GoImportPath("embed")
 	httptransportPackage = protogen.GoImportPath("github.com/not-for-prod/clay/transport/httptransport")
 	transportPackage     = protogen.GoImportPath("github.com/not-for-prod/clay/transport")
-	swaggerPackage       = protogen.GoImportPath("github.com/not-for-prod/clay/transport/swagger")
 	runtimePackage       = protogen.GoImportPath("github.com/grpc-ecosystem/grpc-gateway/v2/runtime")
 )
 
