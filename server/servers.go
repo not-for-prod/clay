@@ -1,29 +1,28 @@
 package server
 
 import (
+	"net/http"
+
 	"github.com/go-chi/chi/v5"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 type serverSet struct {
-	http chi.Router
-	grpc *grpc.Server
+	router  chi.Router
+	grpcSrv *grpc.Server
+	httpSrv *http.Server
 }
 
 func newServerSet(opts *serverOpts) *serverSet {
-	http := chi.NewMux()
+	router := chi.NewMux()
 
 	if opts.HTTPMux != nil {
-		http = opts.HTTPMux
+		router = opts.HTTPMux
 	}
 
 	if len(opts.HTTPMiddlewares) > 0 {
-		http.Use(opts.HTTPMiddlewares...)
-	}
-
-	if len(opts.HTTPMiddlewares) > 0 {
-		http.Use(opts.HTTPMiddlewares...)
+		router.Use(opts.HTTPMiddlewares...)
 	}
 
 	grpcServer := grpc.NewServer(opts.GRPCOpts...)
@@ -31,9 +30,14 @@ func newServerSet(opts *serverOpts) *serverSet {
 		reflection.Register(grpcServer)
 	}
 
+	httpSrv := &http.Server{
+		Handler: router,
+	}
+
 	srv := &serverSet{
-		grpc: grpcServer,
-		http: http,
+		router:  router,
+		grpcSrv: grpcServer,
+		httpSrv: httpSrv,
 	}
 	return srv
 }
