@@ -33,3 +33,15 @@ type WriterC interface {
 
 // Default is the default logger.
 var Default Writer
+
+func Debug(args ...interface{}) { Default.Log(LevelDebug, args...) }
+func Info(args ...interface{})  { Default.Log(LevelInfo, args...) }
+func Warn(args ...interface{})  { Default.Log(LevelWarning, args...) }
+func Error(args ...interface{}) { Default.Log(LevelError, args...) }
+func Fatal(args ...interface{}) { Default.Log(LevelFatal, args...) }
+
+func Debugf(format string, args ...interface{}) { Default.Logf(LevelDebug, format, args...) }
+func Infof(format string, args ...interface{})  { Default.Logf(LevelInfo, format, args...) }
+func Warnf(format string, args ...interface{})  { Default.Logf(LevelWarning, format, args...) }
+func Errorf(format string, args ...interface{}) { Default.Logf(LevelError, format, args...) }
+func Fatalf(format string, args ...interface{}) { Default.Logf(LevelFatal, format, args...) }
