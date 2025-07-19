@@ -45,23 +45,3 @@ func (d *CompoundServiceDesc) Apply(oo ...DescOption) {
 		}
 	}
 }
-
-type CompoundService struct {
-	desc *CompoundServiceDesc
-}
-
-func NewCompoundService(svcs ...Service) *CompoundService {
-	descs := make([]ServiceDesc, 0, len(svcs))
-
-	for _, svc := range svcs {
-		descs = append(descs, svc.GetDescription())
-	}
-
-	return &CompoundService{
-		desc: NewCompoundServiceDesc(descs...),
-	}
-}
-
-func (c *CompoundService) GetDescription() ServiceDesc {
-	return c.desc
-}

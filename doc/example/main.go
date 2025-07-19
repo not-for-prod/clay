@@ -8,18 +8,15 @@ import (
 	"github.com/not-for-prod/clay/server"
 	"github.com/not-for-prod/clay/server/log"
 	"github.com/not-for-prod/clay/server/middlewares/mwgrpc"
-	"github.com/not-for-prod/clay/transport"
 	"github.com/sirupsen/logrus"
 	sum "github.com/utrack/clay/doc/example/implementation"
+	desc "github.com/utrack/clay/doc/example/pb"
 	"google.golang.org/grpc/metadata"
 )
 
 func main() {
 	// Create service
 	service := sum.NewSummator()
-	// Join several services in compound service supporting both contracts
-	// swaggers will be merges
-	multipleServices := transport.NewCompoundService(service)
 
 	err := server.NewServer(
 		12345,
@@ -28,22 +25,26 @@ func main() {
 		server.EnableReflection(true),
 		server.WithRuntimeServeMuxOpts(
 			// Remove runtime.MetadataHeaderPrefix for Set-Cookie headers.
-			runtime.WithOutgoingHeaderMatcher(func(s string) (string, bool) {
-				if s == "set-cookie" {
-					return "set-cookie", true
-				}
-				return runtime.MetadataHeaderPrefix + s, false
-			}),
+			runtime.WithOutgoingHeaderMatcher(
+				func(s string) (string, bool) {
+					if s == "set-cookie" {
+						return "set-cookie", true
+					}
+					return runtime.MetadataHeaderPrefix + s, false
+				},
+			),
 			// Extract Cookie data into metadata.
-			runtime.WithMetadata(func(ctx context.Context, req *http.Request) metadata.MD {
-				tokenCookie, _ := req.Cookie("summator-session")
-				if tokenCookie == nil {
-					return nil // metadata.Pairs()
-				}
-				return metadata.Pairs("summator-session", tokenCookie.Value)
-			}),
+			runtime.WithMetadata(
+				func(ctx context.Context, req *http.Request) metadata.MD {
+					tokenCookie, _ := req.Cookie("summator-session")
+					if tokenCookie == nil {
+						return nil // metadata.Pairs()
+					}
+					return metadata.Pairs("summator-session", tokenCookie.Value)
+				},
+			),
 		),
-	).Run(multipleServices)
+	).Run(desc.NewSummatorServiceDesc(service))
 	if err != nil {
 		logrus.Fatal(err)
 	}

@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/not-for-prod/clay/server/log"
+	"github.com/not-for-prod/clay/server/shutdown"
 	"io"
 	"net"
 	"net/http"
@@ -13,13 +15,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/not-for-prod/clay/server/log"
-	"github.com/not-for-prod/clay/server/shutdown"
-	"github.com/not-for-prod/clay/transport"
-
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/pkg/errors"
+	"github.com/not-for-prod/clay/transport"
 	httpSwagger "github.com/swaggo/http-swagger"
+
+	"github.com/pkg/errors"
 )
 
 // Server is a transport server.
@@ -43,9 +43,9 @@ func NewServer(rpcPort int, opts ...Option) *Server {
 
 // Run starts processing requests to the service.
 // It blocks indefinitely, run asynchronously to do anything after that.
-func (s *Server) Run(svc transport.Service) error {
-	desc := svc.GetDescription()
-
+func (s *Server) Run(descs ...transport.ServiceDesc) error {
+	// Join several ServiceDescs in CompoundServiceDesc
+	desc := transport.NewCompoundServiceDesc(descs...)
 	var err error
 	s.listeners, err = newListenerSet(s.opts)
 	if err != nil {
@@ -55,9 +55,11 @@ func (s *Server) Run(svc transport.Service) error {
 	s.srv = newServerSet(s.opts)
 
 	// Inject static Swagger as root handler
-	s.srv.router.HandleFunc("/swagger.json", func(w http.ResponseWriter, req *http.Request) {
-		io.Copy(w, bytes.NewReader(desc.SwaggerDef()))
-	})
+	s.srv.router.HandleFunc(
+		"/swagger.json", func(w http.ResponseWriter, req *http.Request) {
+			io.Copy(w, bytes.NewReader(desc.SwaggerDef()))
+		},
+	)
 	s.srv.router.HandleFunc(
 		"/docs/*", func(w http.ResponseWriter, r *http.Request) {
 			httpSwagger.Handler(httpSwagger.URL("swagger.json")).ServeHTTP(w, r)
@@ -75,9 +77,7 @@ func (s *Server) Run(svc transport.Service) error {
 	)
 
 	// apply gRPC interceptor
-	if d, ok := desc.(transport.ConfigurableServiceDesc); ok {
-		d.Apply(transport.WithUnaryInterceptor(s.opts.GRPCUnaryInterceptor))
-	}
+	desc.Apply(transport.WithUnaryInterceptor(s.opts.GRPCUnaryInterceptor))
 
 	// Register everything
 	mux := runtime.NewServeMux(s.opts.RuntimeServeMuxOpts...)
