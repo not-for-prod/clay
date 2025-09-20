@@ -10,7 +10,7 @@ import (
 	"github.com/not-for-prod/clay/server/middlewares/mwgrpc"
 	"github.com/sirupsen/logrus"
 	sum "github.com/utrack/clay/doc/example/implementation"
-	desc "github.com/utrack/clay/doc/example/pb"
+	example "github.com/utrack/clay/doc/example/pb"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -22,7 +22,6 @@ func main() {
 		12345,
 		// Recover from both HTTP and gRPC panics and use our own middleware
 		server.WithGRPCUnaryMiddlewares(mwgrpc.UnaryPanicHandler(log.Default)),
-		server.EnableReflection(true),
 		server.WithRuntimeServeMuxOpts(
 			// Remove runtime.MetadataHeaderPrefix for Set-Cookie headers.
 			runtime.WithOutgoingHeaderMatcher(
@@ -30,6 +29,7 @@ func main() {
 					if s == "set-cookie" {
 						return "set-cookie", true
 					}
+
 					return runtime.MetadataHeaderPrefix + s, false
 				},
 			),
@@ -40,11 +40,12 @@ func main() {
 					if tokenCookie == nil {
 						return nil // metadata.Pairs()
 					}
+
 					return metadata.Pairs("summator-session", tokenCookie.Value)
 				},
 			),
 		),
-	).Run(desc.NewSummatorServiceDesc(service))
+	).Start(example.NewSummatorServiceDesc(service))
 	if err != nil {
 		logrus.Fatal(err)
 	}
