@@ -20,28 +20,30 @@ type listenerSet struct {
 	GRPC         net.Listener
 }
 
-func newListenerSet(opts *serverOpts) (*listenerSet, error) {
+func (s *Server) initListeners() error {
 	liSet := &listenerSet{}
 	var err error
 
-	liSet.GRPC, err = newListener(opts.RPCPort)
+	liSet.GRPC, err = newListener(s.opts.RPCPort)
 	if err != nil {
-		return nil, errors.Wrap(err, "couldn't create main listener")
+		return errors.Wrap(err, "couldn't create main listener")
 	}
 
-	if opts.RPCPort == opts.HTTPPort {
+	if s.opts.RPCPort == s.opts.HTTPPort {
 		mux := cmux.New(liSet.GRPC)
 		liSet.GRPC = mux.Match(cmux.HTTP2())
 		liSet.HTTP = mux.Match(cmux.Any())
 		liSet.mainListener = mux
 	} else {
-		liSet.HTTP, err = newListener(opts.HTTPPort)
+		liSet.HTTP, err = newListener(s.opts.HTTPPort)
 	}
 	if err != nil {
-		return nil, errors.Wrap(err, "couldn't create HTTP listener")
+		return errors.Wrap(err, "couldn't create HTTP listener")
 	}
 
-	return liSet, nil
+	s.listeners = liSet
+
+	return nil
 }
 
 // newListener start net.Listener on a port.

@@ -1,23 +1,20 @@
 package server
 
 import (
-	"bytes"
 	"context"
-	"io"
 	"net/http"
 
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/not-for-prod/clay/transport"
-	httpSwagger "github.com/swaggo/http-swagger"
-
-	"github.com/pkg/errors"
+	"google.golang.org/grpc"
 )
 
 // Server is a transport server.
 type Server struct {
-	opts      *serverOpts
-	listeners *listenerSet
-	srv       *serverSet
+	opts        *serverOpts
+	listeners   *listenerSet
+	serviceDesc transport.ServiceDesc
+	httpServer  *http.Server
+	grpcServer  *grpc.Server
 }
 
 // NewServer creates a Server listening on the rpcPort.
@@ -36,52 +33,20 @@ func NewServer(rpcPort int, opts ...Option) *Server {
 // It blocks indefinitely, run asynchronously to do anything after that.
 func (s *Server) Run(descs ...transport.ServiceDesc) error {
 	// Join several ServiceDescs in CompoundServiceDesc
-	desc := transport.NewCompoundServiceDesc(descs...)
+	s.serviceDesc = transport.NewCompoundServiceDesc(descs...)
 
-	var err error
-	s.listeners, err = newListenerSet(s.opts)
-	if err != nil {
-		return errors.Wrap(err, "couldn't create listeners")
+	// init Server
+	for _, fn := range []initFunc{
+		s.initListeners,
+		s.initHTTPServer,
+		s.initGRPCServer,
+	} {
+		if err := fn(); err != nil {
+			return err
+		}
 	}
 
-	s.srv = newServerSet(s.opts)
-
-	// Inject static Swagger as root handler
-	s.srv.http.HandleFunc(
-		"/swagger.json", func(w http.ResponseWriter, req *http.Request) {
-			io.Copy(w, bytes.NewReader(desc.SwaggerDef()))
-		},
-	)
-	s.srv.http.HandleFunc(
-		"/docs/*", func(w http.ResponseWriter, r *http.Request) {
-			httpSwagger.Handler(httpSwagger.URL("swagger.json")).ServeHTTP(w, r)
-		},
-	)
-	s.srv.http.Get(
-		"/docs", func(w http.ResponseWriter, r *http.Request) {
-			http.Redirect(w, r, "/docs/", http.StatusMovedPermanently)
-		},
-	)
-	s.srv.http.Get(
-		"/docs/swagger.json", func(w http.ResponseWriter, r *http.Request) {
-			http.Redirect(w, r, "/swagger.json", http.StatusMovedPermanently)
-		},
-	)
-
-	// apply gRPC interceptor
-	desc.Apply(transport.WithUnaryInterceptor(s.opts.GRPCUnaryInterceptor))
-
-	// Register everything
-	mux := runtime.NewServeMux(s.opts.RuntimeServeMuxOpts...)
-
-	if err = desc.RegisterHTTP(context.Background(), mux); err != nil {
-		return errors.Wrap(err, "couldn't register HTTP server")
-	}
-
-	s.srv.http.Mount("/", mux)
-
-	desc.RegisterGRPC(s.srv.grpc)
-
+	// start Server
 	return s.run()
 }
 
@@ -95,11 +60,11 @@ func (s *Server) run() error {
 		}()
 	}
 	go func() {
-		err := http.Serve(s.listeners.HTTP, s.srv.http)
+		err := s.httpServer.Serve(s.listeners.HTTP)
 		errChan <- err
 	}()
 	go func() {
-		err := s.srv.grpc.Serve(s.listeners.GRPC)
+		err := s.grpcServer.Serve(s.listeners.GRPC)
 		errChan <- err
 	}()
 
@@ -107,7 +72,12 @@ func (s *Server) run() error {
 }
 
 // Stop stops the server gracefully.
-func (s *Server) Stop() {
-	// TODO grace HTTP
-	s.srv.grpc.GracefulStop()
+func (s *Server) Stop(ctx context.Context) error {
+	if err := s.httpServer.Shutdown(ctx); err != nil {
+		return err
+	}
+
+	s.grpcServer.GracefulStop()
+
+	return nil
 }

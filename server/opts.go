@@ -85,12 +85,6 @@ func WithHTTPMux(mux *chi.Mux) Option {
 	}
 }
 
-func EnableReflection(enable bool) Option {
-	return func(o *serverOpts) {
-		o.EnableReflection = enable
-	}
-}
-
 func WithRuntimeServeMuxOpts(opts ...runtime.ServeMuxOption) Option {
 	return func(o *serverOpts) {
 		o.RuntimeServeMuxOpts = append(o.RuntimeServeMuxOpts, opts...)
