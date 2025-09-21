@@ -59,25 +59,35 @@ func (s *Server) run() error {
 			errChan <- err
 		}()
 	}
-	go func() {
-		err := s.httpServer.Serve(s.listeners.HTTP)
-		errChan <- err
-	}()
-	go func() {
-		err := s.grpcServer.Serve(s.listeners.GRPC)
-		errChan <- err
-	}()
+
+	if s.httpServer != nil {
+		go func() {
+			err := s.httpServer.Serve(s.listeners.HTTP)
+			errChan <- err
+		}()
+	}
+
+	if s.grpcServer != nil {
+		go func() {
+			err := s.grpcServer.Serve(s.listeners.GRPC)
+			errChan <- err
+		}()
+	}
 
 	return <-errChan
 }
 
 // Stop stops the server gracefully.
 func (s *Server) Stop(ctx context.Context) error {
-	if err := s.httpServer.Shutdown(ctx); err != nil {
-		return err
+	if s.httpServer != nil {
+		if err := s.httpServer.Shutdown(ctx); err != nil {
+			return err
+		}
 	}
 
-	s.grpcServer.GracefulStop()
+	if s.grpcServer != nil {
+		s.grpcServer.GracefulStop()
+	}
 
 	return nil
 }

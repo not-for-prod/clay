@@ -45,7 +45,7 @@ func main() {
 				},
 			),
 		),
-	).Start(example.NewSummatorServiceDesc(service))
+	).Run(example.NewSummatorServiceDesc(service))
 	if err != nil {
 		logrus.Fatal(err)
 	}
