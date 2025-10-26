@@ -9,14 +9,14 @@ import (
 	"github.com/not-for-prod/clay/server/log"
 	"github.com/not-for-prod/clay/server/middlewares/mwgrpc"
 	"github.com/sirupsen/logrus"
-	sum "github.com/utrack/clay/doc/example/implementation"
+	sum "github.com/utrack/clay/doc/example/implementation/summatorserver"
 	example "github.com/utrack/clay/doc/example/pb"
 	"google.golang.org/grpc/metadata"
 )
 
 func main() {
 	// Create service
-	service := sum.NewSummator()
+	service := sum.NewImplementation()
 
 	err := server.NewServer(
 		12345,

@@ -11,6 +11,8 @@ import (
 	grpc "google.golang.org/grpc"
 )
 
+//go:generate implgen --src sum_grpc.pb.go --interface-name SummatorServer --dst ../delivery
+
 //go:embed sum.swagger.json
 var Swagger []byte
 

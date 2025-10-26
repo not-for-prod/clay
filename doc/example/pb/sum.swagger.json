@@ -116,10 +116,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/sumpb.NestedB",
-              "required": [
-                "b"
-              ]
+              "$ref": "#/definitions/sumpb.NestedB"
             }
           }
         ],

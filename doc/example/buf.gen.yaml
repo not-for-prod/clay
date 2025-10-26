@@ -35,3 +35,5 @@ plugins:
     out: pb
     opt:
       - paths=source_relative
+      - dst=implementation
+      - out=pb

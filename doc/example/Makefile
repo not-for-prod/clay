@@ -37,3 +37,4 @@ generate:
 	buf dep update
 	buf dep prune
 	buf generate
+	go generate ./...
