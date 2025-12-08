@@ -18,8 +18,7 @@ var (
 	transportPackage     = protogen.GoImportPath("github.com/not-for-prod/clay/transport")
 	runtimePackage       = protogen.GoImportPath("github.com/grpc-ecosystem/grpc-gateway/v2/runtime")
 	// flags
-	implImportPath = flag.String("dst", "", "root import path for app implementation")
-	outDir         = flag.String("out", "", "output directory (as used by buf.generate)")
+	implgenDstPathFlag = flag.String("dst", "", "root import path for app implementation")
 )
 
 func main() {
@@ -58,25 +57,14 @@ func generate(p *protogen.Plugin, f *protogen.File) {
 	g.Import(embedPackage)
 	g.P()
 
-	if implImportPath != nil && outDir != nil {
-		genFile := f.GeneratedFilenamePrefix + ".pb.goclay.go"
-
-		// Full path where the file will end up (within the out dir)
-		genDir := filepath.Join(*outDir, filepath.Dir(genFile))
-
-		// Compute relative path from that directory to the desired dst (repo-root based)
-		relDst, err := filepath.Rel(genDir, *implImportPath)
-		if err != nil {
-			relDst = *implImportPath
-		}
-
+	if implgenDstPathFlag != nil {
 		g.P(
 			"//go:generate implgen --src ",
 			filepath.Base(f.GeneratedFilenamePrefix),
 			"_grpc.pb.go --interface-name ",
 			service.GoName,
-			"Server --dst ",
-			relDst,
+			"Server --mod-relative --dst ",
+			*implgenDstPathFlag,
 		)
 		g.P()
 	}

@@ -9,7 +9,7 @@ import (
 	"github.com/not-for-prod/clay/server/log"
 	"github.com/not-for-prod/clay/server/middlewares/mwgrpc"
 	"github.com/sirupsen/logrus"
-	sum "github.com/utrack/clay/doc/example/implementation/summatorserver"
+	sum "github.com/utrack/clay/doc/example/implementation/summator-server"
 	example "github.com/utrack/clay/doc/example/pb"
 	"google.golang.org/grpc/metadata"
 )

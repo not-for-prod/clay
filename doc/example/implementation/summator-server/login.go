@@ -1,4 +1,4 @@
-package summatorserver
+package summator_server
 
 import (
 	"context"
