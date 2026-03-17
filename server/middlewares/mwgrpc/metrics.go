@@ -2,18 +2,22 @@ package mwgrpc
 
 import (
 	grpcprom "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
-	"github.com/prometheus/client_golang/prometheus"
 )
+
+var defaultBuckets = []float64{0.001, 0.01, 0.1, 0.3, 0.6, 1, 3, 6, 9, 20, 30, 60, 90, 120}
 
 type serverMetricsOptions struct {
 	namespace string
 	subsystem string
+	buckets []float64
 }
 
 type ServerMetricsOption func(*serverMetricsOptions)
 
 func newServerMetricsOptions(opts ...ServerMetricsOption) *serverMetricsOptions {
-	o := &serverMetricsOptions{}
+	o := &serverMetricsOptions{
+		buckets: defaultBuckets,
+	}
 
 	for _, opt := range opts {
 		opt(o)
@@ -36,16 +40,23 @@ func WithSubsystem(subsystem string) ServerMetricsOption {
 	}
 }
 
-func NewServerMetrics(registry prometheus.Registerer, opts ...ServerMetricsOption) *grpcprom.ServerMetrics {
+func WithHistogramBuckets([]float64) ServerMetricsOption {
+	return func(o *serverMetricsOptions) {
+		o.
+	}
+}
+
+func NewServerMetrics(opts ...ServerMetricsOption) *grpcprom.ServerMetrics {
 	var serverCounterOptions []grpcprom.CounterOption
 	var serverHistogramOptions []grpcprom.HistogramOption
 
+	serverMetricsOpts := newServerMetricsOptions(opts...)
+	
 	serverHistogramOptions = append(
 		serverHistogramOptions, grpcprom.WithHistogramBuckets(
-			[]float64{0.001, 0.01, 0.1, 0.3, 0.6, 1, 3, 6, 9, 20, 30, 60, 90, 120},
+			serverMetricsOpts.buckets,
 		),
 	)
-	serverMetricsOpts := newServerMetricsOptions(opts...)
 
 	if serverMetricsOpts.namespace != "" {
 		serverCounterOptions = append(serverCounterOptions, grpcprom.WithNamespace(serverMetricsOpts.namespace))
