@@ -9,7 +9,7 @@ var defaultBuckets = []float64{0.001, 0.01, 0.1, 0.3, 0.6, 1, 3, 6, 9, 20, 30, 6
 type serverMetricsOptions struct {
 	namespace string
 	subsystem string
-	buckets []float64
+	buckets   []float64
 }
 
 type ServerMetricsOption func(*serverMetricsOptions)
@@ -40,9 +40,9 @@ func WithSubsystem(subsystem string) ServerMetricsOption {
 	}
 }
 
-func WithHistogramBuckets([]float64) ServerMetricsOption {
+func WithHistogramBuckets(buckets []float64) ServerMetricsOption {
 	return func(o *serverMetricsOptions) {
-		o.
+		o.buckets = buckets
 	}
 }
 
@@ -51,7 +51,7 @@ func NewServerMetrics(opts ...ServerMetricsOption) *grpcprom.ServerMetrics {
 	var serverHistogramOptions []grpcprom.HistogramOption
 
 	serverMetricsOpts := newServerMetricsOptions(opts...)
-	
+
 	serverHistogramOptions = append(
 		serverHistogramOptions, grpcprom.WithHistogramBuckets(
 			serverMetricsOpts.buckets,
