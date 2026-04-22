@@ -71,6 +71,15 @@ func WithGRPCUnaryMiddlewares(mws ...grpc.UnaryServerInterceptor) Option {
 	}
 }
 
+// WithGRPCMiddlewares sets up unary middlewares for gRPC server.
+func WithGRPCMiddlewares(mws ...grpc.UnaryServerInterceptor) Option {
+	mw := grpc_middleware.ChainUnaryServer(mws...)
+	return func(o *serverOpts) {
+		o.GRPCOpts = append(o.GRPCOpts, grpc.UnaryInterceptor(mw))
+		o.GRPCUnaryInterceptor = mw
+	}
+}
+
 // WithGRPCStreamMiddlewares sets up stream middlewares for gRPC server.
 func WithGRPCStreamMiddlewares(mws ...grpc.StreamServerInterceptor) Option {
 	return func(o *serverOpts) {
