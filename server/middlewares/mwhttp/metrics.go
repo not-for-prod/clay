@@ -107,19 +107,34 @@ func (m *ServerMetrics) Collect(ch chan<- prometheus.Metric) {
 	}
 }
 
+// Middleware records HTTP server metrics using bounded route templates.
+// Register Chi middleware that changes RoutePath or RouteMethod before it.
 func (m *ServerMetrics) Middleware() Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(
 			func(w http.ResponseWriter, r *http.Request) {
-				m.serverStartedCounter.WithLabelValues(r.Method, r.URL.Path).Inc()
-
 				startedAt := time.Now()
 				lwr := newLoggingResponseWriter(w)
-				next.ServeHTTP(lwr, r)
-				endedAt := time.Since(startedAt)
+				method := r.Method
+				r, routeState := withRouteTemplateState(r, func(template string) {
+					m.serverStartedCounter.WithLabelValues(method, template).Inc()
+				})
+				routeState.set(matchedChiRouteTemplate(r))
+				completed := false
 
-				m.serverHandledCounter.WithLabelValues(r.Method, r.URL.Path, strconv.Itoa(lwr.statusCode)).Inc()
-				m.serverHandledHistogram.WithLabelValues(r.Method, r.URL.Path).Observe(endedAt.Seconds())
+				defer func() {
+					template := routeTemplate(r, routeState, lwr.statusCode)
+					routeState.set(template)
+					if !completed {
+						return
+					}
+
+					m.serverHandledCounter.WithLabelValues(method, template, strconv.Itoa(lwr.statusCode)).Inc()
+					m.serverHandledHistogram.WithLabelValues(method, template).Observe(time.Since(startedAt).Seconds())
+				}()
+
+				next.ServeHTTP(lwr, r)
+				completed = true
 			},
 		)
 	}
